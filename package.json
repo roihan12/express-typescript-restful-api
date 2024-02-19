@@ -4,13 +4,24 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npx tsc -w",
     "dev": "npx nodemon",
     "lint": "npx eslint ./src --ext .ts",
     "lint:fix": "npx eslint ./src --ext .ts --fix",
     "build": "tsc && cp .env ./build/.env",
-    "prod": "node ./build/index.js"
+    "prod": "node ./build/index.js",
+    "format": "npx prettier . --write",
+    "prepare": "husky",
+    "check-types": "npx tsc --noEmit --pretty",
+    "check-lint": "npx eslint . --ext ts --ext tsx --ext js",
+    "check-format": "npx prettier . --check",
+    "test": "npx jest --detectOpenHandles"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npx pretty-quick --staged ng lint ng test",
+      "pre-push": "ng build --aot true"
+    }
   },
   "keywords": [],
   "author": "",
@@ -29,8 +40,10 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.0.0",
     "eslint-plugin-standard": "^5.0.0",
+    "husky": "^9.0.11",
     "nodemon": "^3.0.3",
     "prettier": "^3.2.5",
+    "pretty-quick": "^4.0.0",
     "ts-node": "^10.9.2",
     "typescript": "*"
   },

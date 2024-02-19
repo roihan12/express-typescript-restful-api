@@ -5,9 +5,9 @@ const app: Application = express()
 const port: number =
   process.env.PORT != null ? parseInt(process.env.PORT) : 5000
 
-  
 app.get('/', (req: Request, res: Response, next: NextFunction) => {
   res.send('hello world!')
+  next()
 })
 
 app.listen(port, () => {
