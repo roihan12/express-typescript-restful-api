@@ -19,6 +19,11 @@ export const inputProductValidation = (
       'number.base': 'product price must number',
       'number.empty': 'product price must not be empty',
       'any.required': 'product price is required'
+    }),
+    productById: Joi.string().required().messages({
+      'number.base': 'product productById must string',
+      'number.empty': 'product productById must not be empty',
+      'any.required': 'product productById is required'
     })
   })
 
