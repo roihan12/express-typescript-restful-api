@@ -1,4 +1,9 @@
-import { deleteProduct, getProductById, insertProduct, updateProduct } from './../services/productsService'
+import {
+  deleteProduct,
+  getProductById,
+  insertProduct,
+  updateProduct
+} from './../services/productsService'
 import { NextFunction, Request, Response } from 'express'
 import { inputProductValidation } from '../validations/productsValidation'
 import { getProducts } from '../services/productsService'
@@ -116,7 +121,6 @@ export const updateDataProduct = async (
     )
   }
 }
-
 
 export const deleteDataProduct = async (
   req: Request,
