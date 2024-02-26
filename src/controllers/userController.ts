@@ -5,8 +5,13 @@ import {
 } from '../validations/userValidation'
 import { createUser, userLogin } from '../services/userService'
 import { encrypt, compare } from '../utils/bcrypt'
-import { UserResponse } from '../types/userType'
-import { generateAccessToken, generateRefreshToken } from '../utils/jwt'
+import { UserResponse, UserType } from '../types/userType'
+import {
+  generateAccessToken,
+  generateRefreshToken,
+  parseJWT,
+  verifyRefreshToken
+} from '../utils/jwt'
 
 export const registerUser = async (
   req: Request,
@@ -99,6 +104,80 @@ export const loginUser = async (
     next(
       new Error(
         'Error on src/controller/userController.ts: loginUser - ' +
+          String((error as Error).message)
+      )
+    )
+  }
+}
+
+export const refreshToken = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<Response | undefined> => {
+  try {
+    const authHeader = req.headers.authorization
+    const token = authHeader?.split(' ')[1]
+
+    if (token === undefined) {
+      return res.status(401).json({
+        error: 'Unauthorized',
+        message: 'verification token failed',
+        data: null
+      })
+    }
+
+    const verifyToken = verifyRefreshToken(token)
+
+    if (verifyToken === null) {
+      return res.status(401).json({
+        error: 'Invalid token',
+        message: 'Refresh token failed',
+        data: null
+      })
+    }
+
+    const data = parseJWT(token)
+
+    const checkUser: UserType = {
+      id: data.id,
+      email: data.email,
+      name: data.name,
+      role: data.role,
+      password: 'xxxx'
+    }
+
+    const user = await userLogin(checkUser)
+
+    if (user === null) {
+      return res.status(401).json({
+        error: 'Invalid token',
+        message: 'Refresh token failed',
+        data: null
+      })
+    }
+
+    const refreshTokenResponse: UserResponse = {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      role: user.role
+    }
+
+    const accessToken = generateAccessToken(refreshTokenResponse)
+    const newRefreshToken = generateRefreshToken(refreshTokenResponse)
+
+    return res.status(200).json({
+      error: null,
+      message: 'refresh token successfully',
+      data: refreshTokenResponse,
+      accessToken,
+      refreshToken: newRefreshToken
+    })
+  } catch (error: Error | unknown) {
+    next(
+      new Error(
+        'Error on src/controller/userController.ts: refreshToken - ' +
           String((error as Error).message)
       )
     )
