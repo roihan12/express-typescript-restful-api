@@ -8,6 +8,7 @@ import { NextFunction, Request, Response } from 'express'
 import { inputProductValidation } from '../validations/productsValidation'
 import { getProducts } from '../services/productsService'
 import ProductsType from '../types/productsType'
+import { UserRequest } from './errorController'
 
 export const getAllProducts = async (
   req: Request,
@@ -57,7 +58,7 @@ export const getDataProductById = async (
 }
 
 export const createDataProduct = async (
-  req: Request,
+  req: UserRequest,
   res: Response,
   next: NextFunction
 ): Promise<Response | undefined> => {
@@ -71,6 +72,9 @@ export const createDataProduct = async (
       })
     }
 
+    const user = req.user
+    console.log(user)
+    value.productById = user!.id
     const data = await insertProduct(value)
 
     return res.status(201).json({

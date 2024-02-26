@@ -4,14 +4,13 @@
     "node": true
   },
   "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
-
   "overrides": [],
   "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
   "parserOptions": {
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
-  "plugins": ["@typescript-eslint"],
   "ignorePatterns": ["**/build/**", "**/node_modules/**", "**/public/*"],
   "rules": {}
 }
