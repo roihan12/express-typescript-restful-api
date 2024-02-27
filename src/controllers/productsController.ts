@@ -41,7 +41,13 @@ export const getDataProductById = async (
   try {
     const { id } = req.params
     const data = await getProductById(parseInt(id))
-
+    if (data === null) {
+      return res.status(401).json({
+        error: null,
+        message: 'Product not found',
+        data: null
+      })
+    }
     return res.status(200).json({
       error: null,
       message: 'Get Product by Id successfully',
@@ -110,8 +116,14 @@ export const updateDataProduct = async (
     }
 
     const data = await updateProduct({ ...value, id: parseInt(id) })
-
-    return res.status(201).json({
+    if (data === null) {
+      return res.status(401).json({
+        error: null,
+        message: 'Product not found',
+        data: null
+      })
+    }
+    return res.status(200).json({
       error: null,
       message: 'update product data successfully save',
       data
@@ -134,7 +146,13 @@ export const deleteDataProduct = async (
   try {
     const { id } = req.params
     const data = await deleteProduct(parseInt(id))
-
+    if (data === null) {
+      return res.status(404).json({
+        error: null,
+        message: 'Product not found',
+        data: null
+      })
+    }
     return res.status(200).json({
       error: null,
       message: 'Delete Product successfully',
